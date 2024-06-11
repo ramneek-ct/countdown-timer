@@ -1,10 +1,11 @@
-import React, { useState,useRef } from "react";
+import React, { useState, useRef } from "react";
 import "./Timer.css";
 
 export default function Timer() {
   const [time, setTime] = useState("");
   const [displayTime, setDisplayTime] = useState(null);
   const stop = useRef(null);
+  const [isRun, setIsRun] = useState(false);
 
   function handleInput(event) {
     setTime(event.target.value);
@@ -14,20 +15,24 @@ export default function Timer() {
     setDisplayTime(time);
   }
 
-    const handleStart = () => {
+  const handleStart = () => {
+    if (!isRun) {
+      setIsRun(true);
       stop.current = setInterval(() => {
         setDisplayTime((prev) => prev - 1);
       }, 1000);
-    };
-
-    const handleStop = () => {
-      clearInterval(stop.current);
-    };
-
-    const handleReset = () => {
-      setDisplayTime(null)
-      setTime("");
     }
+  };
+
+  const handleStop = () => {
+    setIsRun(false);
+    clearInterval(stop.current);
+  };
+
+  const handleReset = () => {
+    setDisplayTime(null);
+    setTime("");
+  };
 
   return (
     <>
@@ -53,14 +58,20 @@ export default function Timer() {
               </div>
             </div>
             <h1 className="time-display">
-              {(displayTime>=0 && displayTime!=null) ? `${displayTime} s` : ""}
+              {displayTime >= 0 && displayTime != null
+                ? `${displayTime} s`
+                : ""}
             </h1>
             <div className="buttons-container">
               <button className="start-button button" onClick={handleStart}>
                 Start
               </button>
-              <button className="stop-button button" onClick={handleStop}>Stop</button>
-              <button className="restart-button button" onClick={handleReset}>Reset</button>
+              <button className="stop-button button" onClick={handleStop}>
+                Stop
+              </button>
+              <button className="restart-button button" onClick={handleReset}>
+                Reset
+              </button>
             </div>
           </div>
         </div>
